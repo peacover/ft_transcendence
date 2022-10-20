@@ -30,6 +30,5 @@ export class FortyTwoStrategy extends PassportStrategy(Strategy, 'jwt') {
         // User.findOrCreate({ fortytwoId: profile.id }, function (err, user) {
         //     return cb(err, user);
         //   });
-        return profile;
     }
 }
