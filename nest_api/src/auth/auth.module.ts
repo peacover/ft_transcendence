@@ -1,7 +1,8 @@
 import { Module } from "@nestjs/common";
 import { PrismaModule } from "src/prisma/prisma.module";
+import { FortyTwoStrategy } from "src/strategy/FortyTwo.strategy";
 import { AuthController } from "./auth.controller";
-import { AuthService, FortyTwoStrategy } from "./auth.service";
+import { AuthService } from "./auth.service";
 
 @Module({
   controllers: [AuthController],
