@@ -11,10 +11,7 @@ datasource db {
 }
 
 model User {
-  id String @id 
-  access_token String
-  email String
-  hash String
-  full_name String
+  id String @id @unique
+  full_name String?
   avatar String?
 }
