@@ -13,13 +13,15 @@ npm install --save @prisma/client
 npx prisma init
 npx prisma migrate dev // generating sql tables
 npx prisma migrate deploy // migrate existing sql tables to our db
-npx prisma generate // create typescript types for ur prisma schema so we use it in our code
+npx prisma generate // create typescript types (interfaces or classes) for ur prisma schema
 npx prisma studio
 
 npm install --save @nestjs/passport passport passport-local
 npm install --save-dev @types/passport-local
 npm install passport-42
 npm install @nestjs/config // for using .env command
+npm install --save @nestjs/jwt passport-jwt
+npm install --save-dev @types/passport-jwt
 
 docker compose up pg_db -d
 docker compose rm pg_db -s -f -v 

@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { FortyTwoGuard } from 'src/user/guard';
+import { FortyTwoGuard } from 'src/auth/guard';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
 

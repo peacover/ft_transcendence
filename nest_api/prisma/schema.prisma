@@ -12,6 +12,8 @@ datasource db {
 
 model User {
   id String @id @unique
-  full_name String?
-  avatar String?
+  full_name String
+  avatar String
+  first_time Boolean
+  username String
 }
