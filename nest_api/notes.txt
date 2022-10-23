@@ -16,6 +16,9 @@ npx prisma migrate deploy // migrate existing sql tables to our db
 npx prisma generate // create typescript types (interfaces or classes) for ur prisma schema
 npx prisma studio
 
+npm i cookie-parser
+npm i -D @types/cookie-parser
+
 npm install --save @nestjs/passport passport passport-local
 npm install --save-dev @types/passport-local
 npm install passport-42

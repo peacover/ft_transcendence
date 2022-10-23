@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, Post, Req, Res, UseGuards } from "@nestjs/common";
 import { FortyTwoGuard } from "src/auth/guard";
 import { AuthService } from "./auth.service";
 
@@ -13,14 +13,10 @@ export class AuthController {
 
     @UseGuards(FortyTwoGuard)
     @Get('login')
-    login() {
-        return this.authService.signToken();
-    }
-
-    @Get() 
-    signin(){
-        console.log();
-        return this.authService.signin();
+    login(@Req() req, @Res() res) {
+        // console.log(req.user);
+        
+        return this.authService.login(req, res);
     }
     
 }
