@@ -22,12 +22,13 @@ export class AuthService {
             avatar: req.user.avatar,
             first_time: true,
         };
-        const secret = this.config.get('JWT_SECRET');
-        const access_token = await this.jwt.signAsync(payload, {
-            expiresIn : '15m',
-            secret : secret,
-        });
+        // const secret = this.config.get('JWT_SECRET');
+        // const access_token = await this.jwt.sign(payload, {
+        //     expiresIn : '15m',
+        //     secret : secret,
+        // });
+        const access_token = await this.jwt.sign(payload);
         res.cookie('access_token', access_token, { httpOnly: true });
-        res.send(payload);
+        res.redirect('/auth/test');
     }
 }
