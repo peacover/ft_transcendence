@@ -52,30 +52,27 @@ export class AuthService {
         res.send(access_token);
     }
 
-    async generate_qr_code(@Req() req, @Res() res){
-        const user : UserDto = req.user_obj;
+    async generate_2fa_secret(user: UserDto)
+    {
         if (await this.prisma.user.findUnique({
             where:{
                 id : user.id,
             }
         })){
-            console.log("user founded!");
             const secret = authenticator.generateSecret();
             const otpauthUrl : string = authenticator.keyuri(user.email, this.config.get('TWO_FACTOR_AUTHENTICATION_APP_NAME'), secret);
-            // res.setHeader('content-type','image/png');
-            // generate authenticator code then save it in db
-            // generate qr based on the code generated then view it
-            // compare the generated code with the one saved in the db in auth/login
-            res.send(this.generateQrCodeDataURL(otpauthUrl));
+            // add secret in db
+            return ({
+                secret,
+                otpauthUrl
+            })
         }
         else{
             console.log("user not founded!");
-            res.send("user not founded!")
             throw ("User not found!");
         }
-
     }
-    async generateQrCodeDataURL(otpAuthUrl: string) {
-        return toDataURL(otpAuthUrl);
-      }
+    async pipeQrCodeStream(@Res() res, otpauthUrl: string) {
+        return toFileStream(res, otpauthUrl);
+    }
 }

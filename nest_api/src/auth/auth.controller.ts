@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Req, Res, UseGuards } from "@nestjs/common";
+import { Controller, Get, Post, Req, Res, UseGuards} from "@nestjs/common";
 import { AuthGuard } from "@nestjs/passport";
 import { FortyTwoGuard, JwtGuard } from "src/auth/guard";
 import { AuthService } from "./auth.service";
@@ -16,8 +16,8 @@ export class AuthController {
 
     @UseGuards(JwtGuard)
     @Get('2fa')
-    generate_qr_code(@Req() req, @Res() res) {
-        return this.authService.generate_qr_code(req, res);
+    async generate_qr_code(@Req() req, @Res() res) {
+        const { otpauthUrl } = await this.authService.generate_2fa_secret(req.user_obj);
+        return (this.authService.pipeQrCodeStream(res, otpauthUrl));
     }
-
 }
