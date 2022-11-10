@@ -5,6 +5,8 @@ CREATE TABLE "User" (
     "avatar" TEXT NOT NULL,
     "first_time" BOOLEAN NOT NULL,
     "username" TEXT NOT NULL,
+    "is_two_fa_enable" BOOLEAN NOT NULL,
+    "two_fa_code" TEXT,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );

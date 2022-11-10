@@ -1,28 +1,28 @@
 import { Body, Controller, Get, Post, Req, Res, UseGuards } from "@nestjs/common";
-import { FortyTwoGuard, JwtAuthGuard } from "src/auth/guard";
+import { AuthGuard } from "@nestjs/passport";
+import { FortyTwoGuard, JwtGuard } from "src/auth/guard";
 import { AuthService } from "./auth.service";
+import { UserDto } from "./dto";
 
 @Controller('auth')
 export class AuthController {
     constructor(private authService: AuthService){}
 
-    @Post()
-    signup(){
-        return this.authService.signup();
-    }
-
     @UseGuards(FortyTwoGuard)
     @Get('login')
     login(@Req() req, @Res() res) {
-        // console.log(req.user);
-        
         return this.authService.login(req, res);
     }
 
-    @UseGuards(JwtAuthGuard)
+    @UseGuards(JwtGuard)
     @Get('test')
-    test(){
-        return("jwt succ");
+    login_2fa(@Req() req, @Res() res) {
+        return this.authService.login_2fa(req, res);
     }
-    
+
+    // @UseGuards(JwtGuard)
+    // @Get('test')
+    // test(@Req() req){
+    // }
+
 }

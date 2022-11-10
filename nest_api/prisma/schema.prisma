@@ -16,4 +16,6 @@ model User {
   avatar String
   first_time Boolean
   username String
+  is_two_fa_enable Boolean
+  two_fa_code String?
 }

@@ -1,7 +1,6 @@
 import { Body, Controller, Get, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { FortyTwoGuard } from 'src/auth/guard';
-import { JwtAuthGuard} from 'src/auth/guard/jwt.guard';
 import { LocalAuthGuard } from './guard';
 import { UserService } from './user.service';
 
@@ -12,7 +11,7 @@ export class UserController {
     constructor(private userService: UserService){}
 
     // @UseGuards(JwtAuthGuard)
-    @Get(":id") 
+    @Get('me') 
     signin(){
         return "get user page";
     }

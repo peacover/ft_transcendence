@@ -22,6 +22,7 @@ export class FortyTwoStrategy extends PassportStrategy(Strategy, '42') {
                 username: profile.username,
                 full_name: profile.displayName,
                 avatar: profile.photos[0].value,
+                is_two_fa_enable: false,
                 first_time: true,
             }
         });

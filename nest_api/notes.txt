@@ -28,3 +28,5 @@ npm install --save-dev @types/passport-jwt
 
 docker compose up pg_db -d
 docker compose rm pg_db -s -f -v 
+
+npm i --save class-validator class-transformer

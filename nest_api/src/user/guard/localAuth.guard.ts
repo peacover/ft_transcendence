@@ -7,7 +7,7 @@ export class LocalAuthGuard extends AuthGuard('local') {
         const request = context.switchToHttp().getRequest();
         // console.log(request.cookies);
         if (request.cookies['access_token']) {
-            console.log(request.cookies['access_token']);
+            // console.log(request.cookies['access_token']);
             console.log('in');
             return true;
         }
