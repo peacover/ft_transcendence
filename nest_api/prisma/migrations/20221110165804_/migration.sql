@@ -7,6 +7,7 @@ CREATE TABLE "User" (
     "username" TEXT NOT NULL,
     "is_two_fa_enable" BOOLEAN NOT NULL,
     "two_fa_code" TEXT,
+    "email" TEXT,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );

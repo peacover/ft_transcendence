@@ -30,3 +30,6 @@ docker compose up pg_db -d
 docker compose rm pg_db -s -f -v 
 
 npm i --save class-validator class-transformer
+
+
+npm install otplib //2fa

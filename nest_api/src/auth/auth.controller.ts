@@ -8,21 +8,16 @@ import { UserDto } from "./dto";
 export class AuthController {
     constructor(private authService: AuthService){}
 
-    @UseGuards(FortyTwoGuard)
+    // @UseGuards(FortyTwoGuard)
     @Get('login')
     login(@Req() req, @Res() res) {
         return this.authService.login(req, res);
     }
 
     @UseGuards(JwtGuard)
-    @Get('test')
-    login_2fa(@Req() req, @Res() res) {
-        return this.authService.login_2fa(req, res);
+    @Get('2fa')
+    generate_qr_code(@Req() req, @Res() res) {
+        return this.authService.generate_qr_code(req, res);
     }
-
-    // @UseGuards(JwtGuard)
-    // @Get('test')
-    // test(@Req() req){
-    // }
 
 }

@@ -27,4 +27,8 @@ export class UserDto{
     @IsBoolean()
     @IsNotEmpty()
     first_time: boolean;
+
+    @IsString()
+    @IsNotEmpty()
+    email: string;
 }

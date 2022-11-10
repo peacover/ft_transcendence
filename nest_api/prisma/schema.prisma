@@ -18,4 +18,5 @@ model User {
   username String
   is_two_fa_enable Boolean
   two_fa_code String?
+  email String?
 }

@@ -15,7 +15,7 @@ export class FortyTwoStrategy extends PassportStrategy(Strategy, '42') {
         })
     }
     async validate(req: Request, accessToken: string, refreshToken: string, profile: Profile, cb: VerifyCallback) : Promise<any> {
-        
+        console.log(profile);
         const user = await this.prisma.user.create({
             data : {
                 id: profile.id,
@@ -24,6 +24,7 @@ export class FortyTwoStrategy extends PassportStrategy(Strategy, '42') {
                 avatar: profile.photos[0].value,
                 is_two_fa_enable: false,
                 first_time: true,
+                // add email
             }
         });
         // req['user'] = user;
