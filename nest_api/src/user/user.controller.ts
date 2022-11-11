@@ -6,7 +6,7 @@ import { UserService } from './user.service';
 
 // guard gloab to check if user have access token
 @UseGuards(LocalAuthGuard)
-@Controller('user')
+@Controller('home')
 export class UserController {
     constructor(private userService: UserService){}
 
