@@ -15,18 +15,25 @@ export class FortyTwoStrategy extends PassportStrategy(Strategy, '42') {
         })
     }
     async validate(req: Request, accessToken: string, refreshToken: string, profile: Profile, cb: VerifyCallback) : Promise<any> {
-        console.log(profile);
-        const user = await this.prisma.user.create({
-            data : {
-                id: profile.id,
-                username: profile.username,
-                full_name: profile.displayName,
-                avatar: profile.photos[0].value,
-                is_two_fa_enable: false,
-                first_time: true,
-                // add email
-            }
-        });
+        // const user = await this.prisma.user.create({
+        //     data : {
+        //         id: profile.id,
+        //         username: profile.username,
+        //         full_name: profile.displayName,
+        //         avatar: profile.photos[0].value,
+        //         is_two_fa_enable: false,
+        //         first_time: true,
+        //         email: profile.emails[0].value,
+        //         // add email
+        //     }
+        // });
+        const user = {
+            id: profile.id,
+            username: profile.username,
+            full_name: profile.displayName,
+            avatar: profile.photos[0].value,
+            email: profile.emails[0].value,
+        };
         // req['user'] = user;
         return user;
     }

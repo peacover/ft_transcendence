@@ -8,16 +8,24 @@ import { UserDto } from "./dto";
 export class AuthController {
     constructor(private authService: AuthService){}
 
-    // @UseGuards(FortyTwoGuard)
+    @UseGuards(FortyTwoGuard)
     @Get('login')
     login(@Req() req, @Res() res) {
         return this.authService.login(req, res);
     }
 
+    @UseGuards(JwtGuard)
+    @Get('login/2fa/generate')
+    async generate_qr_code(@Req() req, @Res() res) {
+        const { otpauthUrl } = await this.authService.generate_2fa_secret(req.user_obj);
+        return (this.authService.pipeQrCodeStream(res, otpauthUrl));
+    }
+
+    @UseGuards(JwtGuard)
     // @Post('login/2fa')
-    @Get("login/2fa/:2fa_code")
+    @Get("login/2fa/:two_fa_code")
     verify_2fa(@Req() req, @Res() res, @Param() param) {
-        console.log("tesssst");
+        // console.log(req.user_obj);
         return this.authService.verify_2fa(req, res, param);
     }
 
@@ -27,10 +35,4 @@ export class AuthController {
         this.authService.enable_2fa(req, res, req.user_obj);
     }
 
-    @UseGuards(JwtGuard)
-    @Get('2fa/generate')
-    async generate_qr_code(@Req() req, @Res() res) {
-        const { otpauthUrl } = await this.authService.generate_2fa_secret(req.user_obj);
-        return (this.authService.pipeQrCodeStream(res, otpauthUrl));
-    }
 }
