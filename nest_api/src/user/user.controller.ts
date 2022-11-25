@@ -1,12 +1,10 @@
-import { Body, Controller, Get, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Put, Param, Req, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { FortyTwoGuard } from 'src/auth/guard';
+import { FortyTwoGuard, JwtGuard } from 'src/auth/guard';
 import { LocalAuthGuard } from './guard';
 import { UserService } from './user.service';
 import { ApiTags } from '@nestjs/swagger';
 
-
-// guard gloab to check if user have access token
 @ApiTags('user')
 @UseGuards(LocalAuthGuard)
 @Controller('home')
@@ -18,5 +16,20 @@ export class UserController {
     signin(){
         return "get user page";
     }
-    
+
+    @UseGuards(JwtGuard)
+    @Get('display/:new_display_name')
+    change_username(@Req() req, @Param() param){
+        console.log(req.user_obj, param.new_display_name);
+        return (req.user_obj, param.new_display_name);
+    }
+
+    // edit username
+    // edit avatar
+    // leaderboard
+    // history games ? 
+    // achievements
+    // add friends
+    // stats of friends
+    // calcul of score
 }
