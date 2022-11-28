@@ -15,20 +15,21 @@ model User {
   full_name String
   username String
   avatar String
-  first_time Boolean
   is_two_fa_enable Boolean
   two_fa_code String?
   email String
-  status String
+  status UserStatus
   win Int
   lose Int
-  //friends
+
   achievements Achievement[]
 
   chats ChatUser[]
   messages MessageUser[]
   player1 Game[] @relation("player1")
   player2 Game[] @relation("player2")
+  friends User[] @relation("friends")
+  friendsRelation User[] @relation("friends")
 }
 
 model Chat{
@@ -42,7 +43,6 @@ model Chat{
 }
 
 model ChatUser{
-  id Int @id @default(autoincrement())
   chat_id Int
   chat Chat @relation(fields: [chat_id], references: [id])
   user_id String
@@ -51,16 +51,19 @@ model ChatUser{
   is_muted Boolean
   mute_time MuteTime?
   is_banned Boolean
+
+  @@id([chat_id, user_id])
 }
 
 model MessageUser{
-  id Int @id @default(autoincrement())
   chat_id Int
   chat Chat @relation(fields: [chat_id], references: [id])
   user_id String
   user User @relation(fields: [user_id], references: [id])
   text String
   time DateTime @default(now())
+
+  @@id([chat_id, user_id])
 }
 
 model Game{

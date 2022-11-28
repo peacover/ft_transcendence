@@ -24,9 +24,6 @@ export class UserDto{
     @IsNotEmpty()
     is_two_fa_enable: boolean;
 
-    @IsBoolean()
-    @IsNotEmpty()
-    first_time: boolean;
 
     @IsString()
     @IsNotEmpty()

@@ -4,6 +4,7 @@ import { JwtService } from "@nestjs/jwt";
 import { authenticator } from "otplib";
 import { PrismaService } from "src/prisma/prisma.service";
 import { UserDto } from "./dto";
+import { UserStatus } from "@prisma/client";
 
 import { toDataURL } from 'qrcode';
 import { toFileStream } from 'qrcode';
@@ -43,12 +44,14 @@ export class AuthService {
             const user = await this.prisma.user.create({
                 data : {
                     id: req.user.id,
-                    username: req.user.username,
                     full_name: req.user.full_name,
+                    username: req.user.username,
                     avatar: req.user.avatar,
                     is_two_fa_enable: false,
-                    first_time: true,
                     email: req.user.email,
+                    status: UserStatus.ON,
+                    win: 0,
+                    lose: 0,
                 }
             });
             const secret = this.config.get('JWT_SECRET');
@@ -60,15 +63,15 @@ export class AuthService {
             res.send(access_token);
         }
         else if (nb_user === 1){
-            await this.prisma.user.update({
-                where: {
-                    id: req.user.id,
-                    // id: "11"
-                },
-                data: {
-                    first_time: false,
-                }
-              });
+            // await this.prisma.user.update({
+            //     where: {
+            //         id: req.user.id,
+            //         // id: "11"
+            //     },
+            //     data: {
+            //         first_time: false,
+            //     }
+            //   });
               const secret = this.config.get('JWT_SECRET');
               const access_token = await this.jwt.sign(payload, {
                   expiresIn : '1d',

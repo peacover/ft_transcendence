@@ -25,11 +25,10 @@ CREATE TABLE "User" (
     "full_name" TEXT NOT NULL,
     "username" TEXT NOT NULL,
     "avatar" TEXT NOT NULL,
-    "first_time" BOOLEAN NOT NULL,
     "is_two_fa_enable" BOOLEAN NOT NULL,
     "two_fa_code" TEXT,
     "email" TEXT NOT NULL,
-    "status" TEXT NOT NULL,
+    "status" "UserStatus" NOT NULL,
     "win" INTEGER NOT NULL,
     "lose" INTEGER NOT NULL,
     "achievements" "Achievement"[],
@@ -49,7 +48,6 @@ CREATE TABLE "Chat" (
 
 -- CreateTable
 CREATE TABLE "ChatUser" (
-    "id" SERIAL NOT NULL,
     "chat_id" INTEGER NOT NULL,
     "user_id" TEXT NOT NULL,
     "role" "Role" NOT NULL,
@@ -57,18 +55,17 @@ CREATE TABLE "ChatUser" (
     "mute_time" "MuteTime",
     "is_banned" BOOLEAN NOT NULL,
 
-    CONSTRAINT "ChatUser_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "ChatUser_pkey" PRIMARY KEY ("chat_id","user_id")
 );
 
 -- CreateTable
 CREATE TABLE "MessageUser" (
-    "id" SERIAL NOT NULL,
     "chat_id" INTEGER NOT NULL,
     "user_id" TEXT NOT NULL,
     "text" TEXT NOT NULL,
     "time" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT "MessageUser_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "MessageUser_pkey" PRIMARY KEY ("chat_id","user_id")
 );
 
 -- CreateTable
@@ -85,8 +82,20 @@ CREATE TABLE "Game" (
     CONSTRAINT "Game_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "_friends" (
+    "A" TEXT NOT NULL,
+    "B" TEXT NOT NULL
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "User_id_key" ON "User"("id");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "_friends_AB_unique" ON "_friends"("A", "B");
+
+-- CreateIndex
+CREATE INDEX "_friends_B_index" ON "_friends"("B");
 
 -- AddForeignKey
 ALTER TABLE "ChatUser" ADD CONSTRAINT "ChatUser_chat_id_fkey" FOREIGN KEY ("chat_id") REFERENCES "Chat"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -105,3 +114,9 @@ ALTER TABLE "Game" ADD CONSTRAINT "Game_user1_id_fkey" FOREIGN KEY ("user1_id") 
 
 -- AddForeignKey
 ALTER TABLE "Game" ADD CONSTRAINT "Game_user2_id_fkey" FOREIGN KEY ("user2_id") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_friends" ADD CONSTRAINT "_friends_A_fkey" FOREIGN KEY ("A") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "_friends" ADD CONSTRAINT "_friends_B_fkey" FOREIGN KEY ("B") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
