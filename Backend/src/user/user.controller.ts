@@ -27,7 +27,7 @@ export class UserController {
     // edit username
     // edit avatar
     // leaderboard
-    // history games ? 
+    // history games ?
     // achievements
     // add friends
     // stats of friends
