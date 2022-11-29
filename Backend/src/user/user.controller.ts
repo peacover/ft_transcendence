@@ -7,29 +7,29 @@ import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('user')
 @UseGuards(LocalAuthGuard)
-@Controller('home')
+@Controller('user')
 export class UserController {
     constructor(private userService: UserService){}
 
-    // @UseGuards(JwtAuthGuard)
+    @UseGuards(JwtGuard)
     @Get('me')
-    signin(){
-        return "get user page";
+    signin(@Req() req){
+        return req.user_obj;
     }
 
     @UseGuards(JwtGuard)
-    @Get('display/:new_display_name')
+    @Put('edit_username/:new_username')
     change_username(@Req() req, @Param() param){
-        console.log(req.user_obj, param.new_display_name);
-        return (req.user_obj, param.new_display_name);
+        // console.log(req);
+        return this.userService.change_username(req.user_obj, param.new_username);
     }
-
-    // edit username
-    // edit avatar
-    // leaderboard
-    // history games ?
-    // achievements
-    // add friends
-    // stats of friends
-    // calcul of score
+    
+    // edit username: DONE!
+    // edit avatar: ON IT
+    // leaderboard: ON IT
+    // history games: NOT SURE
+    // achievements: ON IT
+    // add friends: ON IT
+    // stats of friends: ON IT
+    // calcul of score:ON IT
 }

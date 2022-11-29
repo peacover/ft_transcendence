@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Req } from '@nestjs/common';
 import { PassportStrategy } from "@nestjs/passport";
 import { Strategy } from "passport-local";
 import { PrismaService } from "src/prisma/prisma.service";
+import { UserDto } from './dto';
 
 @Injectable()
 export class UserService {
@@ -13,5 +14,15 @@ export class UserService {
     }
     signin(){
         return 'get user page';
+    }
+    async change_username(user : UserDto, new_username : string){
+        await this.prisma.user.update({
+                where: {
+                    id: user.id,
+                },
+                data: {
+                    username: new_username,
+                }
+        });
     }
 }
