@@ -21,6 +21,8 @@ model User {
   status UserStatus
   win Int
   lose Int
+  score Int
+  win_streak Int
 
   achievements Achievement[]
 

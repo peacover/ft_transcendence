@@ -1,5 +1,5 @@
 import { Achievement, User, UserStatus } from "@prisma/client";
-import { IsString, IsOptional, IsNotEmpty, IsBoolean, IsInt, MaxLength } from "class-validator"
+import { IsString, IsOptional, IsNotEmpty, IsBoolean, IsInt, MaxLength, IsEmail } from "class-validator"
 
 export class UserDto{
     @IsString()
@@ -39,6 +39,9 @@ export class UserDto{
 
     @IsInt()
     lose: number;
+    
+    @IsInt()
+    score: number;
 
     @IsOptional()
     achievements: Achievement[]

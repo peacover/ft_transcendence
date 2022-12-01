@@ -31,6 +31,8 @@ CREATE TABLE "User" (
     "status" "UserStatus" NOT NULL,
     "win" INTEGER NOT NULL,
     "lose" INTEGER NOT NULL,
+    "score" INTEGER NOT NULL,
+    "win_streak" INTEGER NOT NULL,
     "achievements" "Achievement"[],
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")

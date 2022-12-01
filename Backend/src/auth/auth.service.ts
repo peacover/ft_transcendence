@@ -24,7 +24,8 @@ export class AuthService {
                 id: req.user.id,
                 // id : "11",
             }
-        })
+        });
+        const zero : number = 0;
         if (nb_user === 0){
             const user = await this.prisma.user.create({
                 data : {
@@ -35,8 +36,10 @@ export class AuthService {
                     is_two_fa_enable: false,
                     email: req.user.email,
                     status: UserStatus.ON,
-                    win: 0,
+                    win : 0,
                     lose: 0,
+                    score: 0,
+                    win_streak: 0,
                 }
             });
             const secret = this.config.get('JWT_SECRET');
