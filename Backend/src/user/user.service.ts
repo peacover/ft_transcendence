@@ -1,6 +1,6 @@
 import { Injectable, Req, Res } from '@nestjs/common';
 import { PassportStrategy } from "@nestjs/passport";
-import { UserStatus } from '@prisma/client';
+import { Achievement, UserStatus } from '@prisma/client';
 import { Strategy } from "passport-local";
 import { PrismaService } from "src/prisma/prisma.service";
 import { UserDto } from './dto';
@@ -62,6 +62,20 @@ export class UserService {
           });
         return updated_user;
     }
+    async update_user_achievements(user, achievement : Achievement){
+        if (!user.achievements.includes(achievement)){
+            const updated_user = await this.prisma.user.update({
+                where: {id: user.id },
+                data: {
+                    achievements: {
+                        push: achievement,
+                    }
+                }
+              });
+            return updated_user;
+        }
+        return user;
+    }
     async edit_user_status(user : UserDto, status : UserStatus){
         await this.prisma.user.update({
             where: {id: user.id },
@@ -69,5 +83,28 @@ export class UserService {
                 status: status,
             }
           });
+    }
+    async get_user_achievements(user_obj : UserDto){
+        let user = await this.get_user(user_obj.id);
+        const winrate = user.win / (user.win + user.lose) * 100;
+        if(user.win_streak >= 10){
+            user = await this.update_user_achievements(user, Achievement.TEN_WIN_STREAK);
+        }
+        else if (user.win_streak >= 5){
+            user = await this.update_user_achievements(user, Achievement.FIVE_WIN_STREAK);
+        }
+        if (winrate >= 80){
+            user = await this.update_user_achievements(user, Achievement.LEGEND_WIRATE);
+        }
+        else if (winrate >= 60){
+            user = await this.update_user_achievements(user, Achievement.GREAT_WIRATE);
+        }
+        else if (winrate >= 50){
+            user = await this.update_user_achievements(user, Achievement.DECENT_WIRATE);
+        }
+        else{
+            user = await this.update_user_achievements(user, Achievement.GREAT_LOSER);
+        }
+        return user.achievements;
     }
 }

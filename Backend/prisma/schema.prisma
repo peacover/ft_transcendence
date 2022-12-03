@@ -107,9 +107,14 @@ enum ModeGame{
 }
 
 enum Achievement{
-  FIRST_WIN
-  FIRST_MESSAGE
-  //...
+  GREAT_WIRATE
+  LEGEND_WIRATE
+  DECENT_WIRATE
+  GREAT_LOSER
+  FIVE_WIN_STREAK
+  TEN_WIN_STREAK
+  GREAT_AVATAR
+  COMMUNICATOR
 }
 
 enum MuteTime{

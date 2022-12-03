@@ -44,13 +44,17 @@ export class UserController {
         return this.userService.edit_user_status(req.user_obj, UserStatus.INQUEUE);
     }
 
-
+    @UseGuards(JwtGuard)
+    @Get('achievements')
+    get_user_achievements(@Req() req){
+        return this.userService.get_user_achievements(req.user_obj);
+    }
     // edit username: DONE!
     // edit avatar: ON IT
     // leaderboard: ON IT
     // history games: NOT SURE
-    // achievements: ON IT
+    // achievements: DONE!
     // add friends: ON IT
-    // stats of friends: ON IT
-    // calcul of score:ON IT
+    // stats of friends: DONE!
+    // calcul of score: DONE!
 }
