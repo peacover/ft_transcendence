@@ -19,7 +19,7 @@ export class AuthService {
             id: req.user.id,
             // id: "11",
         };
-        const nb_user: number = await this.prisma.user.count({
+        const nb_user : number = await this.prisma.user.count({
             where:{
                 id: req.user.id,
                 // id : "11",

@@ -107,4 +107,76 @@ export class UserService {
         }
         return user.achievements;
     }
+    async get_leaderboard(){
+        const users = await this.prisma.user.findMany({
+            orderBy: {
+                score: 'desc',
+            },
+            take: 10,
+        });
+        const nb_user : number = await this.prisma.user.count();
+        // for(let i = 0; i < users.length; i++){
+        //     console.log(users[i].score, users[i].username);
+        // }
+        return users;
+    }
+    async add_friend(user : UserDto, friend_name : string){
+
+        const nb_user : number = await this.prisma.user.count({
+            where:{
+                username: friend_name,
+            }
+        });
+        if (nb_user == 0){
+            throw 'User not found';
+        }
+        else if (nb_user == 1){
+            const friend = await this.prisma.user.findFirst({
+                where: {
+                    username : friend_name,
+                }
+            });
+            const user_friends = await this.prisma.user.findUnique({
+                where: {
+                    id: user.id,
+                },
+                select: {
+                    friends: true,
+                }
+            });
+            for (let i = 0; i < user_friends.friends.length; i++){
+                if (user_friends.friends[i].username == friend_name){
+                    throw 'Friend already added';
+                }
+            }
+            const updated_user = await this.prisma.user.update({
+                where: {id: user.id },
+                data: {
+                    friends: {
+                        connect: {
+                            id: friend.id,
+                        }
+                    }
+                },
+                include: {friends : true},
+            });
+            return updated_user.friends;
+        }
+        
+        // await this.prisma.user.update({
+        //     where: {id: user.id },
+        //     data: {
+        //         friends: {
+        //             connect: {
+        //                 id: friend_id,
+        //             }
+        //         }
+        //     }
+        //   });
+    //     const users = await this.prisma.user.findMany();
+    //     for(let i = 0; i < users.length; i++){
+    //         console.log(users[i]);
+    //     }
+    }
+
 }

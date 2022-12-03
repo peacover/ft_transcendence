@@ -13,8 +13,9 @@ export class UserController {
     constructor(private userService: UserService){}
 
     @UseGuards(JwtGuard)
-    @Get('me')
+    @Get('/')
     signin(@Req() req){
+        this.userService.edit_user_status(req.user_obj, UserStatus.ON);
         return req.user_obj;
     }
 
@@ -49,12 +50,24 @@ export class UserController {
     get_user_achievements(@Req() req){
         return this.userService.get_user_achievements(req.user_obj);
     }
+
+    @UseGuards(JwtGuard)
+    @Get('leaderboard')
+    get_leaderboard(){
+        return this.userService.get_leaderboard();
+    }
+
+    @UseGuards(JwtGuard)
+    @Get('add_friend/:friend_name')
+    add_friend(@Req() req, @Param() param){
+        return this.userService.add_friend(req.user_obj, param.friend_name);
+    }
     // edit username: DONE!
     // edit avatar: ON IT
-    // leaderboard: ON IT
-    // history games: NOT SURE
+    // leaderboard: DONE!
+    // history games: DEPENDS ON GAME
     // achievements: DONE!
-    // add friends: ON IT
+    // add friends: DONE!
     // stats of friends: DONE!
     // calcul of score: DONE!
 }
