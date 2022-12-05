@@ -25,6 +25,7 @@ CREATE TABLE "User" (
     "full_name" TEXT NOT NULL,
     "username" TEXT NOT NULL,
     "avatar" TEXT NOT NULL,
+    "avatar_key" TEXT,
     "is_two_fa_enable" BOOLEAN NOT NULL,
     "two_fa_code" TEXT,
     "email" TEXT NOT NULL,

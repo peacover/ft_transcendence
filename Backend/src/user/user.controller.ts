@@ -1,10 +1,12 @@
-import { Body, Controller, Get, Post, Put, Param, Req, UseGuards, Res } from '@nestjs/common';
+import { Body, Controller, Get, Post, Put, Param, Req, UseGuards, Res, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { FortyTwoGuard, JwtGuard } from 'src/auth/guard';
 import { LocalAuthGuard } from './guard';
 import { UserService } from './user.service';
 import { ApiTags } from '@nestjs/swagger';
 import { UserStatus } from '@prisma/client';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ReplaySubject } from 'rxjs';
 
 @ApiTags('user')
 @UseGuards(LocalAuthGuard)
@@ -61,6 +63,13 @@ export class UserController {
     @Get('add_friend/:friend_name')
     add_friend(@Req() req, @Param() param){
         return this.userService.add_friend(req.user_obj, param.friend_name);
+    }
+
+    @UseGuards(JwtGuard)
+    @Post('upload')
+    @UseInterceptors(FileInterceptor('file'))
+    async upload(@Req() req, @UploadedFile() file) {
+        return await this.userService.upload(req.user_obj, file);
     }
     // edit username: DONE!
     // edit avatar: ON IT

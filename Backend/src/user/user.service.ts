@@ -1,13 +1,14 @@
-import { Injectable, Req, Res } from '@nestjs/common';
-import { PassportStrategy } from "@nestjs/passport";
+import { Injectable, Logger, Req, Res } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { Achievement, UserStatus } from '@prisma/client';
-import { Strategy } from "passport-local";
 import { PrismaService } from "src/prisma/prisma.service";
 import { UserDto } from './dto';
+import { S3 } from 'aws-sdk';
+import crypto = require('crypto');
 
 @Injectable()
 export class UserService {
-    constructor(private prisma: PrismaService){
+    constructor(private prisma: PrismaService, private config: ConfigService){
     }
     signup(){
         return 'post user page';
@@ -114,7 +115,6 @@ export class UserService {
             },
             take: 10,
         });
-        const nb_user : number = await this.prisma.user.count();
         // for(let i = 0; i < users.length; i++){
         //     console.log(users[i].score, users[i].username);
         // }
@@ -162,21 +162,72 @@ export class UserService {
             });
             return updated_user.friends;
         }
-        
-        // await this.prisma.user.update({
-        //     where: {id: user.id },
-        //     data: {
-        //         friends: {
-        //             connect: {
-        //                 id: friend_id,
-        //             }
-        //         }
-        //     }
-        //   });
-    //     const users = await this.prisma.user.findMany();
-    //     for(let i = 0; i < users.length; i++){
-    //         console.log(users[i]);
-    //     }
     }
+    async upload(user_obj : UserDto, file) {
+        const user = await this.get_user(user_obj.id);
+        const { originalname } = file;
+        const bucketS3 = this.config.get('AWS_BUCKET_NAME');;
+        return (await this.uploadS3(user, file.buffer, bucketS3, originalname));
+    }
+    async uploadS3(user, file, bucket, name) {
+        const s3 = this.getS3();
+        const generateFileName = ((bytes = 15) => crypto.randomBytes(bytes).toString('hex'));
+        const fileName : string = generateFileName() + name;
+
+    //     const sharp = require('sharp');
+    //     const fileBuffer = await sharp(file)
+    // .resize({ height: 1920, width: 1080, fit: "contain" })
+    // .toBuffer()
+
+        var params = {
+            Bucket: bucket,
+            Key: fileName,
+            ContentEncoding: 'base64',
+            ContentDisposition: 'inline',
+            ContentType: 'image/jpeg' || 'image/png' || 'image/jpg' || 'image/gif',
+            Body: file,
+        };
+
+        return new Promise((resolve, reject) => {
+            s3.upload(params, (err, data) => {
+                if (err) {
+                    Logger.error(err);
+                    reject(err.message);
+                }
+                resolve(data);
+
+                this.upload_avatar(user, data.Location, bucket, s3, data.Key);
+                
+            });
+            
+        });
+    }
+    getS3() {
+        return new S3({
+            accessKeyId: this.config.get('AWS_ACCESS_KEY_ID'),
+            secretAccessKey: this.config.get('AWS_SECRET_ACCESS_KEY'),
+        });
+    }
+    async upload_avatar(user, avatar_link : string, bucket, s3, data_key : string){
+        const old_avatar = user.avatar;
+        const old_avatar_key = user.avatar_key;
+        
+        await this.prisma.user.update({
+            where: {id: user.id },
+            data: {
+                avatar: avatar_link,
+                avatar_key: data_key,
+            }
+          });
+        if (old_avatar_key != null){
+            var params = {  Bucket: bucket, Key: old_avatar_key };
+            s3.deleteObject(params, function(err, data) {
+            if (err) console.log(err, err.stack);  // error
+            else     console.log();                 // deleted
+            });
+        }
+    }
+
+        
 
 }
