@@ -1,12 +1,10 @@
 import { Body, Controller, Get, Post, Put, Param, Req, UseGuards, Res, UseInterceptors, UploadedFile } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
 import { FortyTwoGuard, JwtGuard } from 'src/auth/guard';
 import { LocalAuthGuard } from './guard';
 import { UserService } from './user.service';
 import { ApiTags } from '@nestjs/swagger';
 import { UserStatus } from '@prisma/client';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ReplaySubject } from 'rxjs';
 
 @ApiTags('user')
 @UseGuards(LocalAuthGuard)

@@ -201,6 +201,15 @@ export class UserService {
             });
             
         });
+        // try{
+        //     let data = await s3.upload(params).promise();
+        //     await this.upload_avatar(user, data.Location, bucket, s3, data.Key);
+        //     return data;
+        // }
+        // catch(err){
+        //     Logger.error(err);
+        //     throw err.message;
+        // }
     }
     getS3() {
         return new S3({
@@ -209,7 +218,6 @@ export class UserService {
         });
     }
     async upload_avatar(user, avatar_link : string, bucket, s3, data_key : string){
-        const old_avatar = user.avatar;
         const old_avatar_key = user.avatar_key;
         
         await this.prisma.user.update({
@@ -220,14 +228,18 @@ export class UserService {
             }
           });
         if (old_avatar_key != null){
-            var params = {  Bucket: bucket, Key: old_avatar_key };
+            var params = { Bucket: bucket, Key: old_avatar_key };  
             s3.deleteObject(params, function(err, data) {
             if (err) console.log(err, err.stack);  // error
             else     console.log();                 // deleted
             });
         }
     }
-
-        
-
 }
+
+// "Action": [
+//     "s3:AbortMultipartUpload",
+//     "s3:PutObject",
+//     "s3:GetObject",
+//     "s3:DeleteObject"
+// ],
