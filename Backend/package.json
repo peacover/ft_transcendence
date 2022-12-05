@@ -6,6 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
+    "prisma": "npx prisma studio",
     "prisma:dev:deploy": "npx prisma migrate deploy",
     "db:dev:up": "docker compose up pg_db -d",
     "db:dev:rm": "docker compose rm pg_db -s -f -v ",
@@ -61,6 +62,7 @@
     "@types/cookie-parser": "^1.4.3",
     "@types/express": "^4.17.13",
     "@types/jest": "28.1.8",
+    "@types/multer": "^1.4.7",
     "@types/node": "^16.18.4",
     "@types/passport-jwt": "^3.0.7",
     "@types/passport-local": "^1.0.34",

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Put, Param, Req, UseGuards, Res, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { Body, Controller, Get, Post, Put, Param, Req, UseGuards, Res, UseInterceptors, UploadedFile, ParseFilePipeBuilder, HttpStatus } from '@nestjs/common';
 import { FortyTwoGuard, JwtGuard } from 'src/auth/guard';
 import { LocalAuthGuard } from './guard';
 import { UserService } from './user.service';
@@ -66,11 +66,22 @@ export class UserController {
     @UseGuards(JwtGuard)
     @Post('upload')
     @UseInterceptors(FileInterceptor('file'))
-    async upload(@Req() req, @UploadedFile() file) {
+    async upload(@Req() req, @UploadedFile(
+        new ParseFilePipeBuilder()
+        .addFileTypeValidator({
+            fileType: '.(png|jpeg|jpg|gif|svg|bmp|webp)',
+        })
+        .addMaxSizeValidator({
+            maxSize: 10 * 1000000,
+        })
+        .build({
+        errorHttpStatusCode: HttpStatus.UNAUTHORIZED,
+        }),
+    ) file) {
         return await this.userService.upload(req.user_obj, file);
     }
     // edit username: DONE!
-    // edit avatar: ON IT
+    // edit avatar: DONE!
     // leaderboard: DONE!
     // history games: DEPENDS ON GAME
     // achievements: DONE!
