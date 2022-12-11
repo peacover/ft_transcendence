@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Put, Param, Req, UseGuards, Res, UseInterceptors, UploadedFile, ParseFilePipeBuilder, HttpStatus } from '@nestjs/common';
+import { Body, Controller, Get, Post, Put, Param, Req, UseGuards, Res, UseInterceptors, UploadedFile, ParseFilePipeBuilder, HttpStatus, Patch } from '@nestjs/common';
 import { FortyTwoGuard, JwtGuard } from 'src/auth/guard';
 import { LocalAuthGuard } from './guard';
 import { UserService } from './user.service';
@@ -20,10 +20,10 @@ export class UserController {
     }
 
     @UseGuards(JwtGuard)
-    @Put('edit_username/:new_username')
-    change_username(@Req() req, @Param() param){
+    @Patch('edit_username/:new_username')
+    change_username(@Req() req, @Param('new_username') new_username : string, @Res() res){
         // console.log(req);
-        return this.userService.change_username(req.user_obj, param.new_username);
+        return this.userService.change_username(req.user_obj, new_username, res);
     }
     
     @UseGuards(JwtGuard)
@@ -47,20 +47,26 @@ export class UserController {
 
     @UseGuards(JwtGuard)
     @Get('achievements')
-    get_user_achievements(@Req() req){
-        return this.userService.get_user_achievements(req.user_obj);
+    get_user_achievements(@Req() req, @Res() res){
+        return this.userService.get_user_achievements(req.user_obj, res);
     }
 
     @UseGuards(JwtGuard)
     @Get('leaderboard')
-    get_leaderboard(){
-        return this.userService.get_leaderboard();
+    get_leaderboard(@Res() res){
+        return this.userService.get_leaderboard(res);
     }
 
     @UseGuards(JwtGuard)
-    @Get('add_friend/:friend_name')
-    add_friend(@Req() req, @Param() param){
-        return this.userService.add_friend(req.user_obj, param.friend_name);
+    @Get('friends')
+    get_user_friends(@Req() req, @Res() res){
+        return this.userService.get_user_friends(req.user_obj, res);
+    }
+
+    @UseGuards(JwtGuard)
+    @Post('add_friend/:friend_name')
+    add_friend(@Req() req, @Param() param, @Res() res){
+        return this.userService.add_friend(req.user_obj, param.friend_name, res);
     }
 
     @UseGuards(JwtGuard)
@@ -88,4 +94,7 @@ export class UserController {
     // add friends: DONE!
     // stats of friends: DONE!
     // calcul of score: DONE!
+
+
+    //add friend in both relations && post req
 }

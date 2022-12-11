@@ -14,7 +14,7 @@ datasource db {
 model User {
   id String @id @unique
   full_name String
-  username String
+  username String //unique
   avatar String
   avatar_key String?
   is_two_fa_enable Boolean

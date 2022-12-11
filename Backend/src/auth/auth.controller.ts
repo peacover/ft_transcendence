@@ -18,14 +18,14 @@ export class AuthController {
     @UseGuards(JwtGuard)
     @Post('login/2fa/enable')
     async generate_qr_code(@Req() req, @Res() res) {
-        const { otpauthUrl } = await this.authService.generate_2fa_secret(req.user_obj);
+        const { otpauthUrl } = await this.authService.generate_2fa_secret(req.user_obj, res);
         return (this.authService.pipeQrCodeStream(res, otpauthUrl));
     }
 
     @UseGuards(JwtGuard)
     @Post('login/2fa/disable')
-    disable_2fa(@Req() req) {
-        return this.authService.disable_2fa(req.user_obj);
+    disable_2fa(@Req() req, @Res() res) {
+        return this.authService.disable_2fa(req.user_obj, res);
     }
     // @Get('logout')
 
