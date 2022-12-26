@@ -260,11 +260,14 @@ export class UserService {
             }
           });
         if (old_avatar_key != null){
-            var params = { Bucket: bucket, Key: old_avatar_key };  
-            s3.deleteObject(params, function(err, data) {
-            if (err) console.log(err, err.stack);  // error
-            else     console.log();                 // deleted
-            });
+            var params = { Bucket: bucket, Key: old_avatar_key };
+            // delete object from s3
+            
+
+            // s3.deleteObject(params, function(err, data) {
+            // if (err) console.log(err, err.stack);  // error
+            // else     console.log();                 // deleted
+            // });
         }
     }
     async get_user_friends(user : UserDto, @Res() res){
